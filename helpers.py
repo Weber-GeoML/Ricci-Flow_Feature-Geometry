@@ -70,6 +70,8 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
     if verbose:
         print(f"Training finished | Epochs: {epochs} | Train acc: {acc:.2f}% | Test acc: {test_acc:.2f}%")
 
+    return test_acc
+
 
 def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test, calculate_ricci_coefs_every=1, k=50, curv='Ollivier-Ricci'):
     """
