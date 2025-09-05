@@ -2,7 +2,7 @@ import torch.nn as nn
 
 
 class DNN(nn.Module):
-    def __init__(self, input_dimension=2, hidden_units=25, depth=5, vision_model=False):
+    def __init__(self, input_dimension=2, hidden_units=25, depth=5, vision_model=False, activation=nn.ReLU):
         """
         General constructor for feed-forward neural networks
 
@@ -11,11 +11,12 @@ class DNN(nn.Module):
             hidden_units (int, optional): Number of neurons in hidden layers. Defaults to 25.
             depth (int, optional): number of hidden layers. Defaults to 5.
             vision_model (bool, optional): If True, flatten input before forward pass. Defaults to False.
+            activation (nn.Module, optional): Activation function class. Defaults to nn.ReLU.
         """
         super().__init__()
         self.vision_model = vision_model
         self.flatten = nn.Flatten()
-        self.relu = nn.ReLU()
+        self.activation = activation()
         self.sigmoid = nn.Sigmoid()
 
         # First layer
@@ -44,9 +45,9 @@ class DNN(nn.Module):
         if self.vision_model:
             x = self.flatten(x)
 
-        # Pass through all but last layer with ReLU
+        # Pass through all but last layer with activation
         for layer in self.layers[:-1]:
-            x = self.relu(layer(x))
+            x = self.activation(layer(x))
 
         # Final layer without sigmoid
         return self.layers[-1](x)
@@ -67,7 +68,7 @@ class DNN(nn.Module):
         features = [x.detach().cpu().numpy()]
 
         for layer in self.layers[:-1]:
-            x = self.relu(layer(x))
+            x = self.activation(layer(x))
             features.append(x.detach().cpu().numpy())
 
         x = self.sigmoid(self.layers[-1](x))
