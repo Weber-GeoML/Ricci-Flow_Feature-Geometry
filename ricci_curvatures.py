@@ -23,7 +23,7 @@ class Ricci_Curvature_Calculator:
         Args:
             A (csr_matrix): A 2D sparse adjacency matrix in Compressed Sparse Row (CSR) format
         """
-        self.A = A
+        self.A = csr_matrix(A)
     
     def forman_ricci(self):
         """
