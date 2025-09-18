@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from ricci_coefficients import Ricci_Coefficients
+
 def accuracy_fn(y_true, y_pred):
     """Calculates accuracy between truth labels and predictions.
 
