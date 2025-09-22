@@ -11,7 +11,7 @@ class DNN(nn.Module):
             hidden_units (int, optional): Number of neurons in hidden layers. Defaults to 25.
             depth (int, optional): number of hidden layers. Defaults to 5.
             vision_model (bool, optional): If True, flatten input before forward pass. Defaults to False.
-            activation (nn.Module, optional): Activation function class. Defaults to nn.ReLU.
+            activation (nn.Module, optional): Activation function. Defaults to nn.ReLU.
         """
         super().__init__()
         self.vision_model = vision_model
@@ -29,7 +29,7 @@ class DNN(nn.Module):
         # Output layer
         layers.append(nn.Linear(hidden_units, 1))
 
-        # Store as ModuleList so you can iterate in forward
+        # Store as ModuleList 
         self.layers = nn.ModuleList(layers)
 
     def forward(self, x):
@@ -37,7 +37,7 @@ class DNN(nn.Module):
         Forward pass of the neural network.
 
         Args:
-            x (torch.Tensor): Input Tensor
+            x (torch.Tensor): Input Tensor.
 
         Returns:
             torch.Tensor: Output tensor containing the raw predictions (before sigmoid).
@@ -54,10 +54,10 @@ class DNN(nn.Module):
 
     def features(self, x):
         """
-        Forward pass of the neural network while saving the features. 
+        Forward pass of the neural network while saving the neural features. 
 
         Args:
-            x (torch.Tensor): Input Tensor
+            x (torch.Tensor): Input Tensor.
 
         Returns:
             List[np.ndarray]: A list of Numpy arrays containing the features.
