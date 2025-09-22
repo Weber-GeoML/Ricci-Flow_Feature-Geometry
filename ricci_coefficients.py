@@ -15,7 +15,7 @@ class Ricci_Coefficients:
         Args:
             NN (torch.nn.Module): PyTorch neural network.
             X (torch.Tensor): Point cloud.
-            k (int):  Number of neighbors in k-nearest neighbor graph.
+            k (int):  Number of neighbors for construction of k-nearest neighbor graph.
         """
         self.NN = NN
         self.X = X
@@ -40,7 +40,7 @@ class Ricci_Coefficients:
             graph_undirected = graph_directed.maximum(graph_directed.T)
             kNN_graphs.append(graph_undirected)
         
-        # 2. Calculate shortest-path-distances
+        # 2. Calculate shortest-path-distances (using Dijkstra algorithm)
         apsps = []
         for graph in kNN_graphs:
             apsps.append(dijkstra(csgraph=graph, directed=False, unweighted=True, return_predecessors=False))
@@ -68,14 +68,13 @@ class Ricci_Coefficients:
 
     def local_ricci_coefficient(self, curv):
         """
-        Calculate the local Ricci coefficients.
+        Calculate the local Ricci evolution coefficients.
 
         Args:
             curv (str): Type of discrete Ricci curvature.
 
         Raises:
-            ValueError: Discrete Ricci curvature not supported
-            ValueError: One-hop nieghborhood is not connected in subsequent layer.
+            ValueError: Discrete Ricci curvature not supported.
 
         Returns:
             np.ndarray: A 1D array of floats containing the local Ricci coefficients.
@@ -111,7 +110,6 @@ class Ricci_Coefficients:
 
             elif curv == 'Ollivier-Ricci':
                 curvatures.append(Ricci_Curvature_Calculator(A=graph).ollivier_ricci(apsp=apsps[i]))
-                print(f"Curvature of layer {i} calculated", end="\r")
             else: 
                 raise ValueError("Ricci curvature notion not supported.")
             
@@ -136,6 +134,7 @@ class Ricci_Coefficients:
                     else:
                         ec += apsps[i+1][x,y] - apsps[i][x,y]
                 eta.append(ec/len(S1)) 
+            # Check if one-hop neighborhoods in subsequent layer are connected
             if one_hop_neighborhoods_connected:
                 lrc, _ = pearsonr(scalar_curvs, eta)
                 local_ricci_coefficients[x] = lrc
@@ -153,7 +152,6 @@ class Ricci_Coefficients:
 
         Raises:
             ValueError: Discrete Ricci curvature not supported.
-            ValueError: One-hop nieghborhood is not connected in subsequent layer.
 
         Returns:
             np.ndarray: A 1D array of floats containing the layer Ricci coefficients.
@@ -188,7 +186,6 @@ class Ricci_Coefficients:
 
             elif curv == 'Ollivier-Ricci':
                 curvatures.append(Ricci_Curvature_Calculator(A=graph).ollivier_ricci(apsp=apsps[i]))
-                print(f"Curvature of layer {i} calculated", end="\r")
             else: 
                 raise ValueError("Ricci curvature notion not supported.")
         
@@ -212,6 +209,7 @@ class Ricci_Coefficients:
                 if one_hop_neighborhoods_connected:
                     scalar_curvs.append(np.divide(curvatures[i][x].sum(), kNN_graphs[i][x].count_nonzero()))
                     eta.append(ec/len(S1))  
+            # Calculate layer Ricci coefficient
             lrc, _ = pearsonr(scalar_curvs, eta)
             layer_ricci_coefficients[i] =lrc 
 
