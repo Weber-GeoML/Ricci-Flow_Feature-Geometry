@@ -12,7 +12,7 @@ class Ricci_Curvature_Calculator:
     The class accepts an adjacency matrix of the graph and provides methods to compute:
       - Forman Ricci curvature
       - Augmented Forman Ricci curvature
-      - (Approximate) Ollivier Ricci curvature
+      - Approximation of Ollivier Ricci curvature introduced by Tian et al. in "Curvature-based Clustering on Graphs" (2023)
       - Ollivier Ricci curvature
     """
 
@@ -61,7 +61,7 @@ class Ricci_Curvature_Calculator:
     
     def approx_ollivier_ricci(self):
         """
-        Compute the Approximation of the Ollivier-Ricci curvature proposed in Tian et al. "Curvature-based Clustering on Graphs" (2023)
+        Compute the Approximation of the Ollivier-Ricci curvature proposed by Tian et al. in "Curvature-based Clustering on Graphs" (2023)
 
         Returns:
             np.ndarray: Symmetric matrix of shape (n_nodes, n_nodes) containing the approximation for each edge. Non-edge entries remain 0.
@@ -90,10 +90,10 @@ class Ricci_Curvature_Calculator:
 
     def ollivier_ricci(self, apsp=None):
         """
-        Compute the Ollivier-Ricci curvature of all edges in the graph using multiprocessing. It requires the all-pairs shortest path (APSP) matrix, which must be precomputed.
+        Compute the Ollivier-Ricci curvature of all edges in the graph using multiprocessing. 
 
         Args:
-            apsp (np.ndarray): Precomputed all-pairs shortest path matrix of shape (n_nodes, n_nodes).
+            apsp (np.ndarray): Precomputed all-pairs shortest path matrix of shape (n_nodes, n_nodes). Defaults to None.
 
         Returns:
             np.ndarray: Symmetric matrix of shape (n_nodes, n_nodes) containing the Ollivier-Ricci curvature for each edge. Non-edge entries remain 0.
@@ -105,7 +105,7 @@ class Ricci_Curvature_Calculator:
             - This function uses multiprocessing for speed, so it can handle large graphs efficiently.
         """
         if apsp is None:
-            apsp = dijkstra(csgraph=self.A, directed=False, unweighted=True,return_predecessors=False)
+            apsp = dijkstra(csgraph=self.A, directed=False, unweighted=True, return_predecessors=False)
         
         A_upper = triu(self.A, k=1)
         edges = np.vstack(A_upper.nonzero()).T
