@@ -249,6 +249,15 @@ class DatasetFactory:
         return dataset
     
     def load_CIFAR(classes, device="cpu"):
+        """Function to load a binary dataset from the CIFAR-10 dataset.
+
+        Args:
+            classes (tuple): The two classes we want to consider.
+            device (str): Device. Defaults to "cpu".
+
+        Returns:
+            tuple: Train and test datasets.
+        """
         transform = transforms.ToTensor()
         # Load the full dataset
         full_train = datasets.CIFAR10(root='data', train=True, download=True, transform=transform)
