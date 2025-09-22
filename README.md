@@ -1,6 +1,6 @@
 # Neural Feature Geometry Evolves as Discrete Ricci Flow
 
-This repository contains the code used to reproduce the experiments reported in the paper *"Neural Feature Geometry Evolves as Discrete Ricci Flow"*. All experiment notebooks are located in the `experiments` folder.
+This repository contains the code to reproduce the experiments reported in the paper *"Neural Feature Geometry Evolves as Discrete Ricci Flow"*. All experiment notebooks are located in the `experiments` folder.
 
 ### Reproducing the Results
 The experiments can be reproduced using the following notebooks:  
