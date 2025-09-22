@@ -3,14 +3,14 @@ import torch.nn as nn
 from ricci_coefficients import Ricci_Coefficients
 
 def accuracy_fn(y_true, y_pred):
-    """Calculates accuracy between truth labels and predictions.
+    """Calculates accuracy between labels and predictions.
 
     Args:
-        y_true (torch.Tensor): Truth labels for predictions.
-        y_pred (torch.Tensor): Predictions to be compared to predictions.
+        y_true (torch.Tensor): Labels of samples.
+        y_pred (torch.Tensor): Predictions.
 
     Returns:
-        [torch.float]: Accuracy value between y_true and y_pred, e.g. 78.45
+        [torch.float]: Accuracy value between y_true and y_pred, e.g. 99.45
     """
     correct = torch.eq(y_true, y_pred).sum().item()
     acc = (correct / len(y_pred)) * 100
@@ -29,7 +29,7 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
         y_train (torch.Tensor): Train labels of shape (num_samples,).
         X_test (torch.Tensor): Test data of shape (num_samples, num_features).
         y_test (torch.Tensor): Test labels of shape (num_samples,).
-        max_epochs (int, optional): Maximum number of epochs to train to prevent infinite loops. Defaults to 10000.
+        max_epochs (int, optional): Maximum number of epochs. Defaults to 10000.
     """
     loss_fn = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(params=model.parameters(), lr=0.001)
@@ -47,7 +47,7 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
         # 2. Calculate the loss and accuracy
         loss = loss_fn(y_logits, y_train) 
         acc = accuracy_fn(y_train, y_preds)
-        if not acc < threshold_accuracy:
+        if acc >= threshold_accuracy:
             break
         # 3. Optimizer zero grad
         optimizer.zero_grad()
@@ -66,7 +66,7 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
         test_logits = model(X_test).squeeze()
         test_preds = torch.round(torch.sigmoid(test_logits))
 
-        # 2. Calculate loss and accuracy
+        # 2. Calculate test accuracy
         test_acc = accuracy_fn(y_true=y_test, y_pred=test_preds)
     if verbose:
         print(f"Training finished | Epochs: {epochs} | Train acc: {acc:.2f}% | Test acc: {test_acc:.2f}%")
@@ -126,7 +126,6 @@ def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test
 
         # 1. Forward pass
         y_logits = model(X_train).squeeze()
-        y_preds = torch.round(torch.sigmoid(y_logits))
 
         # 2. Calculate the loss
         loss = loss_fn(y_logits, y_train) 
