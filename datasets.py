@@ -6,7 +6,7 @@ from sklearn.datasets import make_swiss_roll, make_circles
 
 class DatasetFactory:
     """
-    Factory class for generating datasets for experiments.
+    Factory class to generate datasets for experiments.
     """
     @staticmethod
     def make_circles(n=1000, noise=0.05):
@@ -26,8 +26,7 @@ class DatasetFactory:
     
     @staticmethod
     def make_4circles(n=1000, r=0.2):
-        """Generate points from the unit circle with labels depending on whether they
-        lie inside one of four smaller inner circles.
+        """Generate points from the unit circle with labels depending on whether they lie inside one of four smaller inner circles.
 
         Args:
             n (int, optional): Number of samples. Defaults to 1000.
@@ -35,8 +34,8 @@ class DatasetFactory:
 
 
         Returns:
-            X (torch.Tensor): Tensor of shape (n, 2) with point coordinates.
-            y (torch.Tensor): Tensor of shape (n,) with labels (0 = outside small circles, 1 = inside).
+            X (torch.Tensor): Tensor of shape (n, 2) containing the coordinates of the points.
+            y (torch.Tensor): Tensor of shape (n,) containing class labels (0 or 1) as integers.
         """
         radii = np.sqrt(np.random.rand(n))
         theta = 2 * np.pi * np.random.rand(n)
@@ -95,7 +94,7 @@ class DatasetFactory:
             center (tuple): 3D coordinates of center.
 
         Returns:
-            x, y, z (np.ndarray): coordinates (same shape as u/v)
+            x, y, z (np.ndarray): coordinates (same shape as u/v).
         """
         x = (R + r * np.cos(v)) * np.cos(u) + center[0]
         y = (R + r * np.cos(v)) * np.sin(u) + center[1]
@@ -125,31 +124,10 @@ class DatasetFactory:
         x1, y1, z1 = DatasetFactory.make_torus(R=R, r=r1, u=u1, v=v1, center=center1)
         x2, z2, y2 = DatasetFactory.make_torus(R=R, r=r2, u=u2, v=v2, center=center2)
 
-        X = np.concatenate((np.stack((x1, y1,z1), axis=1), np.stack((x2, y2,z2), axis=1)))
+        X = np.concatenate((np.stack((x1, y1, z1), axis=1), np.stack((x2, y2, z2), axis=1)))
         y = np.concatenate((np.zeros(n//2), np.ones(n-n//2)))
 
         return torch.from_numpy(X).type(torch.float), torch.from_numpy(y).type(torch.float)
-    
-    @staticmethod
-    def make_swiss_roll(n=1000, noise=0.5):
-        """Generate a dataset of two morrored swiss rolls in 3D.
-
-        Args:
-            n (int, optional): Number of samples. Defaults to 1000.
-            noise (float, optional): Noise level. Defaults to 0.5.
-
-        Returns:
-            X (torch.Tensor): Tensor of shape (n, 3), float32
-            y (torch.Tensor): Tensor of shape (n,), long (0 or 1 labels)
-        """
-        X1, _ = make_swiss_roll(n//2, noise=noise)
-        X2, _ = make_swiss_roll(n-n//2, noise=noise)
-        X2[:, [0, 2]] = -X2[:, [0, 2]]
-        X = np.concatenate((X1, X2), axis=0)
-        y = np.concatenate((np.zeros(len(X1)),np.ones(len(X2))))
-
-        return torch.from_numpy(X).type(torch.float), torch.from_numpy(y).type(torch.float)
-    
     
 
     # -------------------------------- TorchVision Datasets --------------------------------
@@ -271,7 +249,6 @@ class DatasetFactory:
         return dataset
     
     def load_CIFAR(classes, device="cpu"):
-
         transform = transforms.ToTensor()
         # Load the full dataset
         full_train = datasets.CIFAR10(root='data', train=True, download=True, transform=transform)
