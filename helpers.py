@@ -30,6 +30,7 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
         X_test (torch.Tensor): Test data of shape (num_samples, num_features).
         y_test (torch.Tensor): Test labels of shape (num_samples,).
         max_epochs (int, optional): Maximum number of epochs. Defaults to 10000.
+        verbose (bool, optional): Print out information. Defaults to False
     """
     loss_fn = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(params=model.parameters(), lr=0.001)
@@ -74,7 +75,7 @@ def train_model(threshold_accuracy, model, X_train, y_train, X_test, y_test, max
     return test_acc
 
 
-def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test, calculate_ricci_coefs_every=1, k=50, curv='Ollivier-Ricci'):
+def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test, calculate_ricci_coefs_every=1, k=50, curv='Ollivier-Ricci', verbose=False):
     """
     Trains a binary classification PyTorch model and periodically computes the train and test accuracy as well as the local Ricci coefficients.
 
@@ -88,6 +89,7 @@ def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test
         calculate_ricci_coefs_every (int, optional): Frequency at which to save feature representations. Defaults to 1.
         k (int, optional): Number of neighbors in k-nearest-neighbor graph. Defaults to 50.
         curv (str, optional): Curvature notion. Defaults to "Ollivier-Ricci".
+        verbose (bool, optional): Print out information. Defaults to False
 
     Returns:
         train_accuracies (List[float]): Training accuracies recorded at each saved epoch.
@@ -118,7 +120,8 @@ def train_model_with_ricci_coefs(epochs, model, X_train, y_train, X_test, y_test
                 ).local_ricci_coefficient(curv=curv))
             train_accuracies.append(train_acc)
             test_accuracies.append(test_acc)
-            print(f"Epoch: {epoch} | Train accuracy: {train_acc:.2f}% | Test accuracy: {test_acc:.2f}% ")
+            if verbose:
+                print(f"Epoch: {epoch} | Train accuracy: {train_acc:.2f}% | Test accuracy: {test_acc:.2f}% ")
 
 
         # --- Training ---
