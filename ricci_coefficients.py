@@ -198,20 +198,18 @@ class Ricci_Coefficients:
             scalar_curvs = []
             eta = [] 
             for x in range(len(features[0])):
-                # 4.1 Calculate scalar curvature
-
-                # 4.2 Calculate expansion/contraaction
                 S1 = kNN_graphs[i][x].indices 
                 ec = 0
                 one_hop_neighborhoods_connected = True
+                # 4.1 Calculate expansion/contraction
                 for y in S1:
                     if apsps[i+1][x,y] == np.inf:
                         warnings.warn('One hop-neighbors are not connected in the subsequent layer.')
                         one_hop_neighborhoods_connected = False
                     else:
                         ec += apsps[i+1][x,y] - apsps[i][x,y]
+                # 4.2 Calculate scalar curvature
                 if one_hop_neighborhoods_connected:
-                    # 4.1 Calculate scalar curvature
                     scalar_curvs.append(np.divide(curvatures[i][x].sum(), kNN_graphs[i][x].count_nonzero()))
                     eta.append(ec/len(S1))  
             lrc, _ = pearsonr(scalar_curvs, eta)
