@@ -21,11 +21,11 @@ class CommunityStructure:
 
     def ricci_curvature_distribution(self, X, y, curv, k):
         """
-        Compute the distributions of Ricci curvatures for edges within the same class and between different classes in k-nearest neighbor graphs of neural network features.
+        Compute the distributions of Ricci curvatures for inter- and intra-community edges in the k-nearest neighbor graphs constructed from neural network features.
 
         Args:
-            X (torch.Tensor): Input data
-            y (torch.Tensor): True labels
+            X (torch.Tensor): Input data.
+            y (torch.Tensor): True labels.
             curv (str): Ricci curvature notion to use.
             k (int):  Number of neighbors in k-nearest neighbor graph.
 
@@ -33,8 +33,8 @@ class CommunityStructure:
             ValueError: Curvature notion not supported.
 
         Returns:
-            List[np.ndarray]: List containing arrays of Ricci curvature values for edges connecting nodes with the same label in each feature set.
-            List[np.ndarray]: List containing arrays of Ricci curvature values for edges connecting nodes with different labels in each feature set.
+            List[np.ndarray]: List containing arrays of Ricci curvature values for intra-community edges of each layer.
+            List[np.ndarray]: List containing arrays of Ricci curvature values for inter-community edges of each layer.
         """
         features = self.NN.features(X)
         within_curvature_distributions = []
@@ -49,7 +49,7 @@ class CommunityStructure:
             # Calculate Ricci curvature
             calculator = Ricci_Curvature_Calculator(A=A)
             if curv == "Ollivier-Ricci":
-                apsp = dijkstra(csgraph=A, directed=False, unweighted=True,return_predecessors=False)
+                apsp = dijkstra(csgraph=A, directed=False, unweighted=True, return_predecessors=False)
                 ricci_curvatures = calculator.ollivier_ricci(apsp=apsp)
             elif curv == "Approx-Ollivier-Ricci":
                 ricci_curvatures = calculator.approx_ollivier_ricci()
@@ -74,7 +74,7 @@ class CommunityStructure:
     
     def curvature_gap(self, X, y, curv, k):
         """
-        Compute the curvature gap between within-class and between-class edges in k-nearest neighbor graphs of neural network features.
+        Compute the curvature gap between inter- and intra-community edges in k-nearest neighbor graphs constructed from neural network features.
 
         Args:
             X (torch.Tensor): Input data.
@@ -103,7 +103,7 @@ class CommunityStructure:
     
     def modularity(self, X, y, k):
         """
-        Compute the modularity of the true class communities on k-nearest neighbor graphs of the neural network feature representations for each layer.
+        Compute the modularity of the true class communities on k-nearest neighbor graphs constructed from the neural network features.
 
         Args:
             X (torch.Tensor): Input data.
@@ -130,7 +130,7 @@ class CommunityStructure:
     
     def normalized_cut(self, X, y, k):
         """
-        Compute the normalized cut of the true class communities on k-nearest neighbor graphs of the neural network feature representations for each layer.
+        Compute the normalized cut of the true class communities on k-nearest neighbor graphs constructed from the neural network feature representations.
 
         Args:
             X (torch.Tensor): Input data.
