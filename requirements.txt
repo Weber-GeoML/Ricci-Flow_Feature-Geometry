@@ -1,0 +1,10 @@
+torch==2.7.1
+torchvision==0.22.1
+POT==0.9.5
+networkx==3.5
+sklearn==1.7.1
+scipy==1.16.1
+pandas==2.3.2
+numpy==2.3.2
+tqdm==4.67.1
+matplotlib==3.10.5
