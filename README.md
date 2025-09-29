@@ -11,8 +11,3 @@ The experiments can be reproduced using the following notebooks:
 5. Code for Section A.1.1 is provided in `untrained_networks.ipynb`. 
 6. Code for Section A.4.1 is provided in `validation_theoretical_results.ipynb`.  
 7. Code for the dataset visualization is available in `dataset_visualization.ipynb`.
-
-
-
-### Citation and reference
-For technical details and full experiment results, please check [our paper](https://arxiv.org/abs/2509.22362).
