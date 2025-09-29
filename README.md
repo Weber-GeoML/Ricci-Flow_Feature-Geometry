@@ -16,6 +16,7 @@ The experiments can be reproduced using the following notebooks:
 
 For technical details and complete experimental results, see [our paper](https://arxiv.org/abs/2509.22362).
 
+```
 @article{hehl2025neural,
   title={Neural Feature Geometry Evolves as Discrete Ricci Flow}, 
   author={Moritz Hehl and Max von Renesse and Melanie Weber},
@@ -24,3 +25,4 @@ For technical details and complete experimental results, see [our paper](https:/
   archivePrefix={arXiv},
   url={https://arxiv.org/abs/2509.22362}
 }
+```
